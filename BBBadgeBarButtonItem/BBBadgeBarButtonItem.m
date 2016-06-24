@@ -32,10 +32,10 @@
 - (void)initializer
 {
     // Default design initialization
-    self.badgeBGColor   = [UIColor redColor];
+    self.badgeBGColor   = [UIColor colorWithRed:239.0f / 255.0f green:88.0f/255.0f blue:96.0f/255.0f alpha:1.0f];
     self.badgeTextColor = [UIColor whiteColor];
-    self.badgeFont      = [UIFont systemFontOfSize:12.0];
-    self.badgePadding   = 6;
+    self.badgeFont      = [UIFont systemFontOfSize:12.0 weight:UIFontWeightMedium];
+    self.badgePadding   = 4;
     self.badgeMinSize   = 8;
     self.badgeOriginX   = 7;
     self.badgeOriginY   = -9;
@@ -77,8 +77,8 @@
 
     // Using const we make sure the badge doesn't get too smal
     minWidth = (minWidth < minHeight) ? minHeight : expectedLabelSize.width;
-    self.badge.frame = CGRectMake(self.badgeOriginX, self.badgeOriginY, minWidth + padding, minHeight + padding);
-    self.badge.layer.cornerRadius = (minHeight + padding) / 2;
+    self.badge.frame = CGRectMake(self.badgeOriginX, self.badgeOriginY, minWidth, minHeight);
+    self.badge.layer.cornerRadius = (minHeight) / 2;
     self.badge.layer.masksToBounds = YES;
 }
 
@@ -143,6 +143,10 @@
         self.badge.font                 = self.badgeFont;
         self.badge.textAlignment        = NSTextAlignmentCenter;
 
+        self.badge.layer.borderWidth = 1.0f;
+        self.badge.layer.borderColor = [UIColor whiteColor].CGColor;
+        self.badge.layer.masksToBounds = YES;
+        
         [self.customView addSubview:self.badge];
         [self updateBadgeValueAnimated:NO];
     } else {
