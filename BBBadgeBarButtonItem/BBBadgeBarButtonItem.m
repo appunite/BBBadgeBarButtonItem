@@ -35,8 +35,8 @@
     self.badgeBGColor   = [UIColor colorWithRed:239.0f / 255.0f green:88.0f/255.0f blue:96.0f/255.0f alpha:1.0f];
     self.badgeTextColor = [UIColor whiteColor];
     self.badgeFont      = [UIFont systemFontOfSize:12.0 weight:UIFontWeightMedium];
-    self.badgePadding   = 4;
-    self.badgeMinSize   = 8;
+    self.badgePadding   = 6;
+    self.badgeMinSize   = 18;
     self.badgeOriginX   = 7;
     self.badgeOriginY   = -9;
     self.shouldHideBadgeAtZero = YES;
@@ -62,23 +62,20 @@
     // Calculate expected size to fit new value
     // Use an intermediate label to get expected size thanks to sizeToFit
     // We don't call sizeToFit on the true label to avoid bad display
-    UILabel *frameLabel = [self duplicateLabel:self.badge];
-    [frameLabel sizeToFit];
-
-    CGSize expectedLabelSize = frameLabel.frame.size;
-
-    // Make sure that for small value, the badge will be big enough
-    CGFloat minHeight = expectedLabelSize.height;
-
+    
+    CGRect rect = [self.badgeValue boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, _badgeMinSize) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:12.0f weight:UIFontWeightMedium]} context:nil];
+    
+    // size
+    CGSize expectedLabelSize = rect.size;
+    
     // Using a const we make sure the badge respect the minimum size
-    minHeight = (minHeight < self.badgeMinSize) ? self.badgeMinSize : expectedLabelSize.height;
-    CGFloat minWidth = expectedLabelSize.width;
-    CGFloat padding = self.badgePadding;
-
+    CGFloat minWidth = ceil(expectedLabelSize.width);
+    CGFloat padding = self.badgeValue.length > 1 ? self.badgePadding : 0.0f;
+    
     // Using const we make sure the badge doesn't get too smal
-    minWidth = (minWidth < minHeight) ? minHeight : expectedLabelSize.width;
-    self.badge.frame = CGRectMake(self.badgeOriginX, self.badgeOriginY, minWidth, minHeight);
-    self.badge.layer.cornerRadius = (minHeight) / 2;
+    minWidth = (minWidth < _badgeMinSize) ? _badgeMinSize : expectedLabelSize.width;
+    self.badge.frame = CGRectMake(self.badgeOriginX, self.badgeOriginY, minWidth + padding, _badgeMinSize);
+    self.badge.layer.cornerRadius = _badgeMinSize * 0.5f;
     self.badge.layer.masksToBounds = YES;
 }
 
